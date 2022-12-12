@@ -11,7 +11,19 @@ Main contributing code for Evan North's dissertation, found at: https://reposito
 This repository implements a solver for the Helmholtz equation over rectangular domains. These rectangular domains are constructed from square subdomains which are allowed to vary in material properties (i.e. Helmholtz wavenumber). In addition to the uniform square subdomains, "rod" subdomains have been implemented that support a scattering rod of arbitrary radius 'r' centered in the square subdomain. Together, these subdomains allow for the simulation of our main application of interest, the Photonic Crystal Ring Resonator (PCRR). 
 
 ## How to Use
-
+TEST_exact.m contains the complete workflow for a working example, and the process should be able to be derived from there. Here's a layout though:
+1) Pick a domain/init case and run that script.
+2) Set the following parameters:
+    a) OPTIONS.GRIDS = each n you want so that a subdomain's discretization has 2^n + 1 nodes.
+    b) OPTIONS.FUNC = which test function from u_exact.m you want to use.
+    c) OPTIONS.PARALLEL = true/false, are you running in parallel
+    d) OPTIONS.REAL = true/false, is your solution real or complex? If real, this saves some computation.
+    e) OPTIONS.RADIATION = absorbing boundary condition? 0 for no, 1-3 for implemented Engquist-Majda ABCs.
+    f) OPTIONS.FOURIER_AUX = If fourier functions are used along edges, these are their intervals. Not a recommended method, and this shouldn't affect anything when not using them.
+3) Set subdomains info with SET_SubdomainInfo
+4) Set discretization grids
+5) Run the problem_solver() workhorse
+6) Compare computed solution to exact solution
 
 ## Explanation of inits
 A lot of critical parameters are set in the init files. Most of them should be commented, but this should be a master collection of their meanings as well:
@@ -30,7 +42,6 @@ A lot of critical parameters are set in the init files. Most of them should be c
 
 Start by looking at these set examples. From there, it should be clear what the other examples are creating/accomplishing.
 - empty_base.m: Single subdomain with a uniform wavenumber (no rod). 
-- rod_base.m: 
-- mixed_2x1.m:
-- corner_scatter_3x3.m:
-- tunnel_3x3.m:
+- rod_base.m: Single subdomain with a scattering rod (two wavenumbers).
+- corner_scatter_3x3.m: Bottom-left subdomain is a scatterer, the rest are empty.
+- tunnel_3x3.m: 3 uniform subdomains (horizontal) with a row of three rod subdomains above and below (makes a 3x3 square).
